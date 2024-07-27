@@ -16,12 +16,12 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className + " row"}>
 
-        <SideBarNav />
-        <div className="col">
+        {/* <SideBarNav /> */}
+        <div className="col items-center">
         <Header />
           {children}
         </div>
-        <SideBarInfo />
+        {/* <SideBarInfo /> */}
   
       </body>
     </html>
