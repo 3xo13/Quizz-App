@@ -4,14 +4,14 @@ import {getAuth, initializeAuth} from 'firebase/auth'
 import {getFirestore} from 'firebase/firestore'
 import {getStorage} from 'firebase/storage'
 
-const API_KEY = process.env.API_KEY;
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 console.log("🚀 ~ API_KEY:", API_KEY)
-const AUTH_DOMAIN = process.env.AUTH_DOMAIN;
-const PROJECT_ID = process.env.PROJECT_ID;
-const STORAGE_BUCKET = process.env.STORAGE_BUCKET;
-const MESSAGING_SENDER_ID = process.env.MESSAGING_SENDER_ID;
-const APP_ID = process.env.APP_ID;
-const DATABASE_URL = process.env.DATABASE_URL;
+const AUTH_DOMAIN = process.env.NEXT_PUBLIC_AUTH_DOMAIN;
+const PROJECT_ID = process.env.NEXT_PUBLIC_PROJECT_ID;
+const STORAGE_BUCKET = process.env.NEXT_PUBLIC_STORAGE_BUCKET;
+const MESSAGING_SENDER_ID = process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID;
+const APP_ID = process.env.NEXT_PUBLIC_APP_ID;
+const DATABASE_URL = process.env.NEXT_PUBLIC_DATABASE_URL;
 
 const firebaseConfig = {
     apiKey: API_KEY,
