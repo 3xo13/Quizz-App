@@ -8,26 +8,68 @@
   --background-end-rgb: 255, 255, 255;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
-}
+} */
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
+  background-color: rgb(var(--background-start-rgb));
+  /* background: linear-gradient(
       to bottom,
       transparent,
       rgb(var(--background-end-rgb))
     )
-    rgb(var(--background-start-rgb));
+    rgb(var(--background-start-rgb)); */
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.gradientText {
+  /* font-size: 48px; */
+  font-weight: 500;
+  background: -webkit-linear-gradient(45deg, #09009f, #04814d 80%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+  /* text-shadow: 3px 5px 10px darkgray; */
+}
+
+/* basic classes */
+
+.red {
+  @apply bg-red-500
+}
+
+.col {
+  @apply flex flex-col
+}
+
+.row {
+  @apply flex flex-row
+}
+
+.flex-col-center {
+  @apply flex flex-col items-center justify-center
+}
+
+.flex-row-center {
+  @apply flex flex-row items-center justify-center
+}
+
+.screen {
+  @apply w-screen h-screen
+}
+
+.textBlack {
+  @apply text-gray-800
 }
