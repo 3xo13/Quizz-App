@@ -5,7 +5,6 @@ import {getFirestore} from 'firebase/firestore'
 import {getStorage} from 'firebase/storage'
 
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
-console.log("🚀 ~ API_KEY:", API_KEY)
 const AUTH_DOMAIN = process.env.NEXT_PUBLIC_AUTH_DOMAIN;
 const PROJECT_ID = process.env.NEXT_PUBLIC_PROJECT_ID;
 const STORAGE_BUCKET = process.env.NEXT_PUBLIC_STORAGE_BUCKET;

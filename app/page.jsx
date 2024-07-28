@@ -27,7 +27,10 @@ export default function Home() {
 
   return (
     <main className="w-screen">
+      <div className="w-full row gap-5 px-10">
       {quizzList}
+
+      </div>
     </main>
   );
 }
