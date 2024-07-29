@@ -7,8 +7,9 @@ import { removeItemFromArrayState } from '@/utils/stateFunctions/removeItemFromA
 const SingleQuestionCard = ({questionObject, index,  setQuestions, questions}) => {
 	const {question, type, answer, media, level, points} = questionObject;
 	return (
-		<div key={uuidv4()} className='col w-[40dvw] bg-gray-100 p-3 rounded-lg'>
-			<div className='h-5 flex justify-end'>
+		<div key={uuidv4()} className='col w-[40dvw] h-fit bg-gray-100 p-3 rounded-lg'>
+			<div className=' flex justify-between border-b border-gray-300 pb-1'>
+				<p className='text-lg gradientText'>{index}</p>
 				<button
 					className=''
 					onClick={e => removeItemFromArrayState(index, setQuestions, questions.length)}>

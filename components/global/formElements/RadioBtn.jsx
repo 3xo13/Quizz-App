@@ -9,7 +9,7 @@ const RadioBtn = ({state, setState, value}) => {
 					name={value}
 					value={value}
 					checked={state === value}
-					onChange={e => setState(e.target.value)}
+					onChange={e => setState(e.target.value, )}
 					className="mx-2"
 				/>
 				{value}

@@ -1,5 +1,5 @@
 "use client"
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useMemo, useRef} from 'react'
 import {v4 as uuidv4} from 'uuid';
 import {collection, addDoc} from 'firebase/firestore';
 import {database} from '@/app/_lip/firebase/firebaseConfig';
@@ -11,6 +11,9 @@ import SingleQuestionCard from '@/components/dashboard/quizz/SingleQuestionCard'
 import RadioBtn from '@/components/global/formElements/RadioBtn';
 import uploadfile from '@/utils/database/uploadfile';
 import LoadingOverlay from '@/components/global/LoadingOverlay';
+import HomeQuizzCard from '@/components/quizz/HomeQuizzCard';
+import DashQuizzCard from '@/components/quizz/DashQuizzCard';
+import MediaInput from '@/components/global/formElements/MediaInput';
 
 const NewQuizz = () => {
     const [title, setTitle] = useState("");
@@ -20,32 +23,47 @@ const NewQuizz = () => {
     // current question
     const [question, setQuestion] = useState("");
     const [answer, setAnswer] = useState("");
-    const [questionType, setQuestionType] = useState("text");
+    const [type, setType] = useState("text");
     const [questionMedia, setQuestionMedia] = useState(null);
+    const [level, setLevel] = useState("easy");
+    const [points, setPoints] = useState(100);
 
     const [errorMessage, setErrorMessage] = useState("");
     const [loading, setLoading] = useState("");
 
+
+    const mimoQuizCard = useMemo(() => <DashQuizzCard
+        quizz={{
+            title,
+            image
+        }} />, [title, image])
+
+    const mediaInputRef = useRef()
+
     // reset media file if question is text
     useEffect(() => {
-        if (questionType === "text") setQuestionMedia(null);
-    },[questionType])
+        setQuestionMedia(null);
+        
+    }, [type])
 
     const handleNewQuestion = async (event) => {
         event.preventDefault();
-        if (!question) return setErrorMessage("please add question");
-        if (!answer) return setErrorMessage("please add answer");
-        if (questionType != "text" && !questionMedia) return setErrorMessage("please add a file");
+        if (!question) 
+            return setErrorMessage("please add question");
+        if (!answer) 
+            return setErrorMessage("please add answer");
+        if (type != "text" && !questionMedia) 
+            return setErrorMessage("please add a file");
         setLoading(true)
         const media = await uploadfile(questionMedia, "questionsFiles")
         setQuestions(prev => [
             ...prev, {
-                question: question,
-                answer: answer,
-                type: questionType,
+                question,
+                answer,
+                type,
                 media,
-                level: "easy",
-                points: 100
+                level,
+                points
             }
         ]);
         setAnswer("");
@@ -65,7 +83,7 @@ const NewQuizz = () => {
         }
         setLoading(true)
         const imageUrl = await uploadfile(image, "quizzImages")
-        
+
         const newPost = await addDoc(collection(database, 'questions'), {
             title: title.trim(),
             image: imageUrl,
@@ -86,57 +104,65 @@ const NewQuizz = () => {
     return (
         <div className='text-black col gap-10 w-screen items-center p-5'>
             {/* list questions */}
-            {loading ? <LoadingOverlay /> : null}
+            {
+                loading
+                    ? <LoadingOverlay/>
+                    : null
+            }
+            {/* error message */}
             {
                 errorMessage
                     ? <p className='text-red-400 text-lg capitalize'>{errorMessage}</p>
                     : null
             }
-            <div className='w-full row items-center'>
-                <div
-                    className='w-[50dvw] h-[70dvh] overflow-y-auto col items-center p-5 gap-3 '>
-                    <h2 className='w-[40dvw] text-start'>Questions</h2>
-                    {questionsList}
-                    {
-                        questions.length
-                            ? <button
-                                    className='bg-green-400 rounded text-white w-[40dvw] py-1'
-                                    onClick={handleSubmit}>Submit</button>
-                            : null
-                    }
-                </div>
-                <div className='col items-center w-[50dvw] min-h-[70dvh] gap-5 p-5'>
-                    {/* Title and Image */}
-                    <form className="w-full">
-                        <div className='col gap-5 w-full  p-5'>
-                            <div className='col gap-2'>
-                                <label htmlFor="title" className="requiered">Quizz Title</label>
-                                <input
-                                    type="text"
-                                    id='title'
-                                    value={title}
-                                    onChange={e => {
-                                        setTitle(e.target.value)
-                                        setErrorMessage("")
-                                    }}/></div>
-                            <div className='col gap-2'>
-                                <label htmlFor="image" className="requiered">Image</label>
-                                <input
-                                    type="file"
-                                    id='image'
-                                    accept="image/*"
-                                    multiple={false}
-                                    onChange={e => {
-                                        setErrorMessage("")
-                                        setImage(e.target.files[0])
-                                    }}/></div>
-                        </div>
 
-                    </form>
+            {/* form */}
+            <div className='w-full col items-center'>
+                <div
+                    className='row w-full gap-5 p-5'>
+                    <div className='w-1/2 h-full col items-center gap-10'>
+                        {/* Quizz Title and Image */}
+                        <form className="w-full">
+                            <div className='col gap-5 bg-slate-600 rounded-lg shadow-lg text-white p-5'>
+                                <div className='col gap-5 w-full'>
+                                    {/* quizz title */}
+                                    <div className='col gap-2'>
+                                        <label htmlFor="title" className="requiered">Quizz Title</label>
+                                        <input
+                                            type="text"
+                                            id='title'
+                                            value={title}
+                                            onChange={e => {
+                                                setTitle(e.target.value)
+                                                setErrorMessage("")
+                                            }}
+                                            className='textInput'/></div>
+                                    {/* quizz image */}
+                                    <div className='col gap-2'>
+                                        <label htmlFor="image" className="requiered">Image</label>
+                                        <input
+                                            type="file"
+                                            id='image'
+                                            accept="image/*"
+                                            multiple={false}
+                                            onChange={e => {
+                                                setErrorMessage("")
+                                                setImage(e.target.files[0])
+                                            }}/></div>
+                                </div>
+                            </div>
+                        </form>
+                        {/* quizz card */}
+                        {
+                            title && image
+                                ? mimoQuizCard
+                                : null
+                        }
+                    </div>
 
                     {/* New Question */}
-                    <form className="w-full">
-                        <div className='col gap-5 w-full  p-5'>
+                    <form className="w-1/2">
+                        <div className='col gap-5 bg-slate-600 rounded-lg shadow-lg text-white  p-5 '>
                             {/* question */}
                             <div className='col gap-2'>
                                 <label htmlFor="question" className='requiered'>Question</label>
@@ -144,27 +170,59 @@ const NewQuizz = () => {
                                     type="text"
                                     id='question'
                                     value={question}
-                                    onChange={e => setQuestion(e.target.value)}/></div>
-                                    {/* question type */}
-                            <div className='col gap-5'>
+                                    onChange={e => setQuestion(e.target.value)}
+                                    className='textInput'/></div>
+                            {/* question type */}
+                            <div className='col gap-5 border-b-2 pb-2 border-slate-100'>
                                 <h4 className=''>Question Type</h4>
                                 <div className='row justify-between'>
-                                    <RadioBtn state={questionType} setState={setQuestionType} value={"text"}/>
-                                    <RadioBtn state={questionType} setState={setQuestionType} value={"image"}/>
-                                    <RadioBtn state={questionType} setState={setQuestionType} value={"audio"}/>
-                                    <RadioBtn state={questionType} setState={setQuestionType} value={"video"}/>
+                                    <RadioBtn state={type} setState={setType} value={"text"}/>
+                                    <RadioBtn state={type} setState={setType} value={"image"}/>
+                                    <RadioBtn state={type} setState={setType} value={"audio"}/>
+                                    <RadioBtn state={type} setState={setType} value={"video"}/>
                                 </div>
                             </div>
 
-                                    {/* media file */}
-                            {questionType != "text" ? <div className='col gap-2'>
-                                <label htmlFor="media" className='requiered'>media</label>
+                            {/* media file */}
+                            {
+                                type != "text"
+                                    ? <div className='col gap-2 border-b-2 pb-2 border-slate-100'>
+                                        <label htmlFor="media" className='requiered'>Media</label>
+                                        <input
+                                            ref={mediaInputRef}
+                                            type="file"
+                                            id='media'
+                                            multiple={false}
+                                            accept={`${type}/*`}
+                                            onChange={e => setQuestionMedia(e.target.files[0])} /></div>
+                                    : null
+                            }
+
+                            {/* level */}
+                            <div className='col gap-5 border-b-2 pb-2 border-slate-100'>
+                                <h4 className=''>Level</h4>
+                                <div className='row justify-between'>
+                                    <RadioBtn state={level} setState={setLevel} value={"easy"}/>
+                                    <RadioBtn state={level} setState={setLevel} value={"medium"}/>
+                                    <RadioBtn state={level} setState={setLevel} value={"hard"}/>
+                                </div>
+                            </div>
+                            {/* points */}
+                            <div className="w-full border-b-2 pb-2 border-slate-100">
+
+                                <div className="" id="tooltip">
+                                    {` Points : ${points}`}
+                                </div>
                                 <input
-                                    type="file"
-                                    id='media'
-                                    multiple={false}
-                                    accept={`${questionType}/*`}
-                                    onChange={e => setQuestionMedia(e.target.files[0])} /></div> : null}
+                                    type="range"
+                                    min={100}
+                                    max={1000}
+                                    step={100}
+                                    value={points}
+                                    onChange={e => setPoints(e.target.value)}
+                                    className="w-full"/>
+
+                            </div>
 
                             {/* answer */}
                             <div className='col gap-2'>
@@ -173,17 +231,35 @@ const NewQuizz = () => {
                                     type="text"
                                     id='answer'
                                     value={answer}
-                                    onChange={e => setAnswer(e.target.value)}/></div>
+                                    onChange={e => setAnswer(e.target.value)}
+                                    className='textInput'/></div>
 
                             <button
                                 onClick={e => handleNewQuestion(e)}
-                                className='bg-green-400 rounded text-white py-1'>Add</button>
+                                className='bg-green-500 rounded text-white py-1'>Add</button>
                         </div>
 
                     </form>
 
                 </div>
+            </div>
+            {/* questions preview */}
+            <div
+                className='w-full  overflow-hidden col items-center p-5 gap-3 bg-slate-600 rounded-lg shadow-lg'>
+                {questions.length ? <h2 className='text-start text-white text-2xl '>Questions</h2> : null}
+                <div className='grid grid-cols-2 grid-rows-auto gap-5'>
+                    {questionsList}
+                </div>
+                <div className='w-[50%]'>
+                {
+                    questions.length
+                        ? <button
+                            className='bg-green-500 rounded text-slate-100 w-full py-1 text-lg '
+                                onClick={handleSubmit}>Submit</button>
+                        : null
+                }
 
+                </div>
             </div>
 
         </div>
