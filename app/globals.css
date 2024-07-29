@@ -73,3 +73,7 @@ body {
 .textBlack {
   @apply text-gray-800
 }
+
+.requiered {
+  @apply after:content-['_*'] after:text-red-500
+}

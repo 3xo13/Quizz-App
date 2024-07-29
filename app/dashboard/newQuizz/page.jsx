@@ -8,68 +8,76 @@ import {getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage";
 import {storage} from '@/app/_lip/firebase/firebaseConfig';
 import Image from 'next/image';
 import SingleQuestionCard from '@/components/dashboard/quizz/SingleQuestionCard';
+import RadioBtn from '@/components/global/formElements/RadioBtn';
+import uploadfile from '@/utils/database/uploadfile';
+import LoadingOverlay from '@/components/global/LoadingOverlay';
 
 const NewQuizz = () => {
     const [title, setTitle] = useState("");
     const [image, setImage] = useState(null);
 
     const [questions, setQuestions] = useState([]);
-    const [currenQuestion, setCurrenQuestion] = useState("");
-    const [currentAnswer, setcurrentAnswer] = useState("");
+    // current question
+    const [question, setQuestion] = useState("");
+    const [answer, setAnswer] = useState("");
+    const [questionType, setQuestionType] = useState("text");
+    const [questionMedia, setQuestionMedia] = useState(null);
 
     const [errorMessage, setErrorMessage] = useState("");
+    const [loading, setLoading] = useState("");
 
-    const handleNewQuestion = (event) => {
+    // reset media file if question is text
+    useEffect(() => {
+        if (questionType === "text") setQuestionMedia(null);
+    },[questionType])
+
+    const handleNewQuestion = async (event) => {
         event.preventDefault();
+        if (!question) return setErrorMessage("please add question");
+        if (!answer) return setErrorMessage("please add answer");
+        if (questionType != "text" && !questionMedia) return setErrorMessage("please add a file");
+        setLoading(true)
+        const media = await uploadfile(questionMedia, "questionsFiles")
         setQuestions(prev => [
             ...prev, {
-                question: currenQuestion,
-                answer: currentAnswer,
-                type: "Text (temporary default)",
-                media: "it well be added soon"
+                question: question,
+                answer: answer,
+                type: questionType,
+                media,
+                level: "easy",
+                points: 100
             }
         ]);
-        setcurrentAnswer("");
-        setCurrenQuestion("");
-        console.log("image :", image);
+        setAnswer("");
+        setQuestion("");
+        setLoading(false)
     }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-				if (!title) {
-						setErrorMessage("Please add a Title")
-						return;
-				}
+        if (!title) {
+            setErrorMessage("Please add a Title")
+            return;
+        }
         if (!image) {
             setErrorMessage("Please Upload an Image")
             return;
         }
-        const fileType = image
-            .name
-            .split(".")
-            .pop()
-        const imagePath = `quizzImages/${title.replace(/[^a-zA-Z0-9_-]/g, '')}.${fileType}`
-        // upload image
-        const storageRef = ref(storage, imagePath);
-        // 'file' comes from the Blob or File API
-        await uploadBytes(storageRef, image).then(async (snapshot) => {
-            console.log('Uploaded a blob or file!');
-            const imageUrl = await getDownloadURL(storageRef)
-
-            const newPost = await addDoc(collection(database, 'questions'), {
-                title: title.trim(),
-                image: imageUrl,
-                questions
-            });
+        setLoading(true)
+        const imageUrl = await uploadfile(image, "quizzImages")
+        
+        const newPost = await addDoc(collection(database, 'questions'), {
+            title: title.trim(),
+            image: imageUrl,
+            questions
         });
-
-        // console.log("🚀 ~ newPost ~ newPost:", newPost)
+        setLoading(false)
     };
 
     const questionsList = questions.map(
         (questionObject, index) => <SingleQuestionCard
             key={uuidv4()}
-            question={questionObject}
+            questionObject={questionObject}
             index={index}
             setQuestions={setQuestions}
             questions={questions}/>
@@ -78,6 +86,7 @@ const NewQuizz = () => {
     return (
         <div className='text-black col gap-10 w-screen items-center p-5'>
             {/* list questions */}
+            {loading ? <LoadingOverlay /> : null}
             {
                 errorMessage
                     ? <p className='text-red-400 text-lg capitalize'>{errorMessage}</p>
@@ -90,7 +99,9 @@ const NewQuizz = () => {
                     {questionsList}
                     {
                         questions.length
-								? <button className='bg-green-400 rounded text-white w-[40dvw] py-1' onClick={handleSubmit}>Submit</button>
+                            ? <button
+                                    className='bg-green-400 rounded text-white w-[40dvw] py-1'
+                                    onClick={handleSubmit}>Submit</button>
                             : null
                     }
                 </div>
@@ -99,7 +110,7 @@ const NewQuizz = () => {
                     <form className="w-full">
                         <div className='col gap-5 w-full  p-5'>
                             <div className='col gap-2'>
-                                <label htmlFor="title" className="after:content-['_*'] after:text-red-500">Quizz Title</label>
+                                <label htmlFor="title" className="requiered">Quizz Title</label>
                                 <input
                                     type="text"
                                     id='title'
@@ -109,7 +120,7 @@ const NewQuizz = () => {
                                         setErrorMessage("")
                                     }}/></div>
                             <div className='col gap-2'>
-									<label htmlFor="image" className="after:content-['_*'] after:text-red-500">Image</label>
+                                <label htmlFor="image" className="requiered">Image</label>
                                 <input
                                     type="file"
                                     id='image'
@@ -126,22 +137,47 @@ const NewQuizz = () => {
                     {/* New Question */}
                     <form className="w-full">
                         <div className='col gap-5 w-full  p-5'>
+                            {/* question */}
                             <div className='col gap-2'>
-                                <label htmlFor="question">Question</label>
+                                <label htmlFor="question" className='requiered'>Question</label>
                                 <input
                                     type="text"
                                     id='question'
-                                    value={currenQuestion}
-                                    onChange={e => setCurrenQuestion(e.target.value)}/></div>
+                                    value={question}
+                                    onChange={e => setQuestion(e.target.value)}/></div>
+                                    {/* question type */}
+                            <div className='col gap-5'>
+                                <h4 className=''>Question Type</h4>
+                                <div className='row justify-between'>
+                                    <RadioBtn state={questionType} setState={setQuestionType} value={"text"}/>
+                                    <RadioBtn state={questionType} setState={setQuestionType} value={"image"}/>
+                                    <RadioBtn state={questionType} setState={setQuestionType} value={"audio"}/>
+                                    <RadioBtn state={questionType} setState={setQuestionType} value={"video"}/>
+                                </div>
+                            </div>
+
+                                    {/* media file */}
+                            {questionType != "text" ? <div className='col gap-2'>
+                                <label htmlFor="media" className='requiered'>media</label>
+                                <input
+                                    type="file"
+                                    id='media'
+                                    multiple={false}
+                                    accept={`${questionType}/*`}
+                                    onChange={e => setQuestionMedia(e.target.files[0])} /></div> : null}
+
+                            {/* answer */}
                             <div className='col gap-2'>
-                                <label htmlFor="answer">Answer</label>
+                                <label htmlFor="answer" className='requiered'>Answer</label>
                                 <input
                                     type="text"
                                     id='answer'
-                                    value={currentAnswer}
-                                    onChange={e => setcurrentAnswer(e.target.value)}/></div>
+                                    value={answer}
+                                    onChange={e => setAnswer(e.target.value)}/></div>
 
-                            <button onClick={e => handleNewQuestion(e)} className='bg-green-400 rounded text-white py-1'>Add</button>
+                            <button
+                                onClick={e => handleNewQuestion(e)}
+                                className='bg-green-400 rounded text-white py-1'>Add</button>
                         </div>
 
                     </form>
