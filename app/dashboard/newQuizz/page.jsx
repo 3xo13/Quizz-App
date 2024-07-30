@@ -43,11 +43,17 @@ const NewQuizz = () => {
     // reset media file if question is text
     useEffect(() => {
         setQuestionMedia(null);
-        
     }, [type])
+
+    // reset media file if question is text
+    useEffect(() => {
+        setErrorMessage("");
+    }, [type, question, answer, questionMedia])
 
     const handleNewQuestion = async (event) => {
         event.preventDefault();
+        if (questions.length == 6)
+            return setErrorMessage("you can't add more questions");
         if (!question) 
             return setErrorMessage("please add question");
         if (!answer) 
@@ -90,6 +96,7 @@ const NewQuizz = () => {
             questions
         });
         setLoading(false)
+        setQuestions([])
     };
 
     const questionsList = questions.map(
@@ -102,7 +109,7 @@ const NewQuizz = () => {
     )
 
     return (
-        <div className='text-black col gap-10 w-screen items-center p-5'>
+        <div className='text-black col gap-10 max-w-[98dvw] w-screen items-center p-5 overflow-x-hidden'>
             {/* list questions */}
             {
                 loading
@@ -245,16 +252,17 @@ const NewQuizz = () => {
             </div>
             {/* questions preview */}
             <div
-                className='w-full  overflow-hidden col items-center p-5 gap-3 bg-slate-600 rounded-lg shadow-lg'>
+                className='w-full col items-center p-5 gap-3 bg-slate-600 rounded-lg shadow-lg' 
+                style={{ opacity: questions.length ? 1 : 0}}>
                 {questions.length ? <h2 className='text-start text-white text-2xl '>Questions</h2> : null}
                 <div className='grid grid-cols-2 grid-rows-auto gap-5'>
                     {questionsList}
                 </div>
                 <div className='w-[50%]'>
                 {
-                    questions.length
+                    questions.length == 6
                         ? <button
-                            className='bg-green-500 rounded text-slate-100 w-full py-1 text-lg '
+                            className='bg-green-500 rounded text-slate-100 w-full py-1 text-lg mt-10'
                                 onClick={handleSubmit}>Submit</button>
                         : null
                 }

@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import React from 'react'
 import ImageWithText from '../global/ImageWithText'
+import Link from 'next/link'
 
 const Header = () => {
     return (
@@ -26,11 +27,13 @@ const Header = () => {
             </div>
             {/* user */}
             <div className='w-1/3'>
+            <Link href={"/profile"} >
                 <ImageWithText
                     imgSrc={"/images/placeHolders/user.png"}
                     imgSize={"40px"}
                     text={"User Name"}
 										imgRadius={"50%"}/>
+            </Link>
             </div>
         </div>
     )

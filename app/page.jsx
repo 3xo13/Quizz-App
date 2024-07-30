@@ -9,7 +9,7 @@ import HomeQuizzCard from "@/components/quizz/HomeQuizzCard";
 
 
 export default function Home() {
-  const [QuizzCollection, setQuizzCollection] = useState([])
+  const [quizzCollection, setQuizzCollection] = useState([])
   useEffect(() => {
     (async () => {
       const querySnapshot = await getDocs(collection(database, "questions"));
@@ -23,7 +23,7 @@ export default function Home() {
     })()
   }, [])
 
-  const quizzList = QuizzCollection.map((quizz, index) => <HomeQuizzCard key={uuidv4()} quizz={quizz.quizz} /> )
+  const quizzList = quizzCollection.map((quizz, index) => <HomeQuizzCard key={uuidv4()} quizz={quizz.quizz} /> )
 
   return (
     <main className="w-screen">
