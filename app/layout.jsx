@@ -3,6 +3,8 @@ import "./globals.css";
 import Header from "@/components/header/Header";
 import SideBarNav from "@/components/sideBars/SideBarNav";
 import SideBarInfo from "@/components/sideBars/SideBarInfo";
+import { Suspense } from "react";
+import Loading from "./Loading";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,10 +20,12 @@ export default function RootLayout({ children }) {
       <body className={inter.className + " row"}>
 
         {/* <SideBarNav /> */}
+        <Suspense fallback={<Loading />}>
         <div className="col items-center">
         <Header />
           {children}
         </div>
+        </Suspense>
         {/* <SideBarInfo /> */}
   
       </body>
