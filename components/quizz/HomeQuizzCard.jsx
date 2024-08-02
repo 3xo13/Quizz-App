@@ -7,7 +7,7 @@ const HomeQuizzCard = ({quizz}) => {
         <button
             key={uuidv4()}
             className="w-60 h-60 rounded bg-gray-200 col items-center justify-end p-5 relative shadow-lg shadow-black/60"
-            >
+            onClick={e => "console.log(quizz)"}>
             <Image
                 src={quizz.image}
                 width={300}

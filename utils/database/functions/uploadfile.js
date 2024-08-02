@@ -1,5 +1,5 @@
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "@/app/_lip/firebase/firebaseConfig";
+import { storage } from "@/utils/database/firebase/firebaseConfig";
 import { v4 as uuidv4 } from 'uuid';
 
 const uploadfile = async (file, directory) => {
