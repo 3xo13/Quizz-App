@@ -1,4 +1,5 @@
 "use client"
+import Header from '@/components/header/Header'
 import { database } from '@/utils/database/firebase/firebaseConfig'
 import { collection, getDocs } from 'firebase/firestore'
 import Link from 'next/link'
@@ -29,8 +30,11 @@ const Profile = () => {
 	
 	return (
 		<div className='screen col items-center	'>
+			<div className='w-full flex-center pb-10'>
+				<Header />
+			</div>
 			<Link href={"/newGame"}>
-			<p className='border p-2 '>create game</p>
+			<p className='border p-2 bg-green-500 text-white'>create game</p>
 			</Link>
 			<div className='p-5 w-full'>
 			{gameCards}

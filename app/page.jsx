@@ -6,6 +6,7 @@ import { getDocs, collection } from "firebase/firestore";
 import { database } from "../utils/database/firebase/firebaseConfig";
 import { v4 as uuidv4 } from 'uuid';
 import HomeQuizzCard from "@/components/quizz/HomeQuizzCard";
+import Header from "@/components/header/Header";
 
 
 export default function Home() {
@@ -27,6 +28,9 @@ export default function Home() {
 
   return (
     <main className="w-screen">
+      <div className='w-full flex-center pb-10'>
+        <Header />
+      </div>
       <div className="w-full row flex-wrap p-10 gap-5 px-10">
         {quizzList}
 
