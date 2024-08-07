@@ -33,7 +33,9 @@ export default function Home() {
       </div>
       <div className="w-full row flex-wrap p-10 gap-5 px-10">
         {quizzList}
-
+      </div>
+      <div>
+        
       </div>
     </main>
   );

@@ -3,6 +3,8 @@ import Image from 'next/image';
 import React, {useState} from 'react'
 import QuestionMedia from './QuestionMedia';
 import {useStore} from '@/components/stateManager/DataStore';
+import CallAFriendScreen from '../lifelines/screens/CallAFriendScreen';
+import AnswerTwiceScreen from '../lifelines/screens/AnswerTwiceScreen';
 
 const Question = ({}) => {
     const {
@@ -19,6 +21,9 @@ const Question = ({}) => {
     const setIsAnswered = useStore(state => state.setIsAnswered)
     const setgameRecord = useStore(state => state.setGameRecord);
     const gameRecord = useStore(state => state.gameRecord);
+
+    const isCallAFriend = useStore(state => state.isCallAFriend);
+    const isAnswereTwice = useStore(state => state.isAnswereTwice);
 
     const handleAnswer = () => {
         setShowAnswer(true)
@@ -46,8 +51,8 @@ const Question = ({}) => {
         setgameRecord(newGameRecord)
     }
     return (
-        <div className='w-full h-4/6'>
-
+        <div className='w-full h-4/6 relative'>
+            
             <div className='full flex flex-col sm:flex-row items-center justify-center'>
                 <div
                     className={`flex-col-center gap-5 p-5 
@@ -63,6 +68,8 @@ const Question = ({}) => {
                                 onClick={handleAnswer}>Answer</button>
                     }
                     {showAnser && <p className='text-2xl text-center gradientText'>{`The answer is : ${answer}`}</p>}
+                    {isCallAFriend && <CallAFriendScreen />}
+                    {isAnswereTwice && <AnswerTwiceScreen />}
                 </div>
                 <div
                     className={`${type == "text"
