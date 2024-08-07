@@ -7,7 +7,7 @@ const EndGame = ({ team1, team2, gameId }) => {
 	const [height, width] = useWindowSize();
 	const [winingTeam, setWiningTeam] = useState({})
 	const [losingTeam, setLosingTeam] = useState({})
-	const [isDraw, setIsDraw] = useState(true)
+	const [isDraw, setIsDraw] = useState(false)
 
 	useEffect(() => {
 		if (team1.points > team2.points) {
@@ -18,6 +18,7 @@ const EndGame = ({ team1, team2, gameId }) => {
 			setWiningTeam(team2)
 			setLosingTeam(team1)
 		}
+		
 		if (team1.points == team2.points) {
 			setIsDraw(true)
 		}
