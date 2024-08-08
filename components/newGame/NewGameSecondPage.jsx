@@ -6,6 +6,7 @@ import QuestionsOptions from './QuestionsOptions'
 import {createNewGame} from '@/utils/database/functions/createNewGame'
 import CategoryReviewCard from './CategoryReviewCard'
 import { useRouter } from 'next/navigation'
+import LoadingOverlay from '../global/LoadingOverlay'
 
 
 const defaultQuestionLevels = [
@@ -26,12 +27,13 @@ const defaultQuestions = [
     ""
 ]
 
-const NewGameSecondPage = ({ choosenCategories, setOpenSelf, gameInfo }) => {
+const NewGameSecondPage = ({ choosenCategories, choosenLifelines, setOpenSelf, gameInfo }) => {
     const router = useRouter()
     const [categoryList, setCategoryList] = useState([])
     const [gameObject, setGameObject] = useState([])
+    const [loading, setLoading] = useState(false)
 
-    // added levels to the question set
+    // add levels to the question set
     useEffect(() => {
         if (!choosenCategories.length) {
             setOpenSelf(false)
@@ -51,8 +53,9 @@ const NewGameSecondPage = ({ choosenCategories, setOpenSelf, gameInfo }) => {
         if (categoryList.length && categoryList[0].quizz.questionLevels) {
             const gameCategories = categoryList.map(cat => ({
                 category: cat.id,
+                title: cat.quizz.title,
                 levels: categoryList[0].quizz.questionLevels,
-                questions: defaultQuestions
+                questions: defaultQuestions,
             }))
            setGameObject(gameCategories) 
         }
@@ -73,16 +76,22 @@ const NewGameSecondPage = ({ choosenCategories, setOpenSelf, gameInfo }) => {
     
 
     const handleAccept = async () => {
-        const newGameResult = await createNewGame(gameInfo, gameObject)
+        setLoading(true)
+        const newGameResult = await createNewGame(gameInfo, gameObject, choosenLifelines)
         if (newGameResult) {
+            // todo: handle new game confirmation 
+            // add loading state
+            router.push("/profile")
             console.log("🚀 ~ handleAccept ~ newGameResult:", newGameResult)
         }else{
             console.error(newGameResult)
         }
+        setLoading(false)
     }
 
     return (
         <div className='w-screen min-h-screen col items-center gap-5 p-10'>
+            {loading && <LoadingOverlay /> }
             <div className='w-full flex-center border-b-2 pb-5 border-gray-400'>
                 <button
                     className='bg-green-500 rounded py-2 px-3 text-white'

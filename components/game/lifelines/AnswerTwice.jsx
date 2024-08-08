@@ -35,7 +35,7 @@ const AnswerTwice = ({ team, index }) => {
 
 	return (
 		<button className='' onClick={handleClick} disabled={disabled}>
-			<Image src={"/images/icons/lifelines/doubleCheck.png"}
+			<Image src={"/images/icons/lifelines/tick.png"}
 				width={30} height={30} alt='call a friend' className='w-8 h-8' style={{
 					opacity: disabled
 						? "0.2"

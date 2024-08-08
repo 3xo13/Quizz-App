@@ -7,7 +7,7 @@ const Header = () => {
     return (
         <div className='w-[70dvw] h-20 flex-row-center p-5 '>
             {/* search bar */}
-            <div className='w-2/3'>
+            {/* <div className='w-2/3'>
                 <form>
                     <div className='row items-center bg-white rounded-full'>
                         <input
@@ -24,7 +24,7 @@ const Header = () => {
                         </div>
                     </div>
                 </form>
-            </div>
+            </div> */}
             {/* user */}
             <div className='w-1/3'>
             <Link href={"/profile"} >
@@ -32,7 +32,7 @@ const Header = () => {
                     imgSrc={"/images/placeHolders/user.png"}
                     imgSize={"40px"}
                     text={"User Name"}
-										imgRadius={"50%"}/>
+					imgRadius={"50%"}/>
             </Link>
             </div>
         </div>

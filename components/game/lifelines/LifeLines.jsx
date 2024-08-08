@@ -36,7 +36,7 @@ const LifeLines = ({team}) => {
                             <CallAFriend key={uuidv4()} team={team} index={index}/>
                         )
                         break;
-                    case "answer":
+                    case "answer2":
                         currentLifeLines.push(
                             <AnswerTwice key={uuidv4()} team={team} index={index}/>
                         )
@@ -48,15 +48,15 @@ const LifeLines = ({team}) => {
                         break;
     
                     default:
-                                    currentLifeLines.push(
-                                        <SubtractPoints key={uuidv4()} index={index} />
-                                    )
-                                    currentLifeLines.push(
-                                        <AnswerTwice key={uuidv4()} index={index} />
-                                    )
-                                    currentLifeLines.push(
-                                        <DoublePoints key={uuidv4()} index={index} />
-                                    )
+                                    // currentLifeLines.push(
+                                    //     <SubtractPoints key={uuidv4()} index={index} />
+                                    // )
+                                    // currentLifeLines.push(
+                                    //     <AnswerTwice key={uuidv4()} index={index} />
+                                    // )
+                                    // currentLifeLines.push(
+                                    //     <DoublePoints key={uuidv4()} index={index} />
+                                    // )
                         break;
                 }
             });

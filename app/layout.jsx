@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
   
   return (
     <html lang="en">
-      <body className={inter.className + " row"}>
+      <body className={inter.className + " row overflow-x-hidden max-w-screen"}>
         <div className='full absolute bg-contain bg-repeat z-0 opacity-10'
           style={{ backgroundImage: "url(/images/icons/game/quiz_bg.jpg)",
             backgroundSize: "200px 200px"

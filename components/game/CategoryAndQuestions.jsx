@@ -66,7 +66,7 @@ const CategoryAndQuestions = (
 
             {/* background image and white overlay */}
             <div className='w-full h-full absolute z-0 '>
-                <div className='bg-white/80 absolute w-full h-full z-10 rounded-xl '></div>
+                <div className='bg-white/70 absolute w-full h-full z-10 rounded-xl '></div>
                 <Image
                     src={category.image}
                     width={400}

@@ -17,6 +17,7 @@
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
     "react-parallax-tilt": "^1.7.234",
+    "react-spinners": "^0.14.1",
     "uuid": "^10.0.0",
     "zustand": "^4.5.4"
   },

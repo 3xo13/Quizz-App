@@ -4,9 +4,7 @@ import Team from './Team';
 
 const GameFooter = ({game }) => {
     const team1 = game.gameObj.team1;
-    console.log("🚀 ~ GameFooter ~ team1:", team1)
     const team2 = game.gameObj.team2;
-    console.log("🚀 ~ GameFooter ~ team2:", team2)
     return (
         <div className='w-full h-full row'>
             <div className='w-1/3'>

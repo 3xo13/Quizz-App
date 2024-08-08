@@ -1,13 +1,14 @@
 import { database } from "@/utils/database/firebase/firebaseConfig"
 import { collection, addDoc } from "firebase/firestore"
 
-const createNewGame = async (gameInfo, categories) => {
+const createNewGame = async (gameInfo, categories, lifelines) => {
 	const gameObject = {
 		title: gameInfo.name,
 		team1: gameInfo.team1,
 		team2: gameInfo.team2,
 		userId: "1",
-		categories
+		categories,
+		lifelines
 	};
 
 	try {
